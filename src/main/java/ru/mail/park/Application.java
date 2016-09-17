@@ -1,4 +1,4 @@
-package main;
+package ru.mail.park;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,10 +13,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  и поиск компонентов Spring (@SpringBootConfiguration, @EnableAutoConfiguration)
  */
 @SpringBootApplication
-public class Main {
+public class Application {
     public static void main(String[] args) {
         //Старт приложения. Здесь стартует embedded jetty server.
         // Spring подключает к Jetty Dispatcher Servlet, который обрабатывает HTTP-запросы пользователей
-        SpringApplication.run(Main.class, args);
+        SpringApplication.run(Application.class, args);
     }
 }
