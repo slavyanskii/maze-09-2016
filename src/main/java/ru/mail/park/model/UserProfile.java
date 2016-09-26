@@ -1,5 +1,7 @@
 package ru.mail.park.model;
 
+import org.springframework.util.StringUtils;
+
 /**
  * Created by Solovyev on 17/09/16.
  */
