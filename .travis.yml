@@ -1,0 +1,10 @@
+language: java
+jdk:
+- oraclejdk8
+deploy:
+  provider: heroku
+  api_key:
+    secure: JufGFr4Q/iPwVmOBtW4MLKY8/Y16hrlqwSDh2CkKJufS0X0BXd4gCkY2BF55dDJq/UPlvvIBGSxMUFFJEPT5I+LRkTviVsDMapOwSNm9U5ZN+YWeQNeHlDfRBo73d+hQbXL/nkjfeqPYsuJkZZ5BT8nw1setd4mZzMXVwGxbkuNer6KuA4hhBmQ/rufi9rtrznF4c+YwysD15AfQBbCFM7eFLul1iYCgQ5e4dmJgtP0JDdpRU0qx7zsg6+QQ1NVoDyZ+iM7sILd9DCooueO2+7bLS1H38IxMkoevti5F0QsbmcqRd/WGwRwW5mfCws4qZxwGDGa8jPJnLdhgLfO8OkrYjldGbjNOjG4IOw5u86UIKcyVlUSyuZi1ohROGGcsKrPQCQGYsSSpzsHoBBRIP1y2j0eqIG8B1Pz2Y5bGyMbQTHakm00gAVovOpkhKC/F5y/hMQrdqB1D4jRRpzCioWeIxTooa4Ed1nxtPbJjEjkx0kg/6LlUcHO3yWRQhC/lmWtsoWIzjBvOmV/fuANnD22vlaSokg+GARCFlpH9tX4Dg/OWbg2Y+JzwvPAHXsdybtkJYLDBsd1PGgJj+EJmNTiGetw6WOedP+5IXVRmAvPC1X7UZYast+3b3ovop3qOuKqsF9Tup/5P4wMGvx/D6Sgb8CLjI/qJyLjMxsYenXM=
+  app: maze-backend
+  on:
+    repo: kirrok/maze-09-2016
