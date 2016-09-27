@@ -3,13 +3,10 @@ package ru.mail.park.main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
-
-import javax.servlet.http.HttpSession;
 
 /**
  * Created by Solovyev on 06/09/16.
@@ -28,28 +25,21 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/registration", method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody RegistrationRequest body,
-                                HttpSession httpSession) {
-        final String sessionId = httpSession.getId();
+    public ResponseEntity login(@RequestBody RegistrationRequest body) {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
-        final String repeatPassword = body.getRepeatPassword();
 
-        final Validator validator = new Validator.Builder(login, password).email(email).repeatPassword(repeatPassword).build();
+        final Validator validator = new Validator(login, password, email);
 
         if (!validator.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.StatusAsJson());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
         }
-        if (StringUtils.isEmpty(login)
-                || StringUtils.isEmpty(password)
-                || StringUtils.isEmpty(email)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{}");
-        }
+
         final UserProfile existingUser = accountService.getUser(login);
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{}");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"User already exists\"}");
         }
 
         accountService.addUser(login, password, email);
@@ -61,23 +51,27 @@ public class RegistrationController {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
-        final Validator validator = new Validator.Builder(login, password).build();
+
+        final Validator validator = new Validator(login, password);
 
         if (!validator.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.StatusAsJson());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
         }
 
         final UserProfile user = accountService.getUser(login);
 
-        if (user.getPassword().equals(password)) {
+        if (user != null && user.getPassword().equals(password)) {
             return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{\"User already exists\"}");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"Wrong login or password.\"}");
     }
 
     private static final class AuthorizationRequest {
         private String login;
         private String password;
+
+        private AuthorizationRequest() {
+        }
 
         private AuthorizationRequest(String login, String password) {
             this.login = login;
@@ -96,20 +90,15 @@ public class RegistrationController {
     private static final class RegistrationRequest {
         private String login;
         private String password;
-        private String repeatPassword;
         private String email;
 
+        private RegistrationRequest() {
+        }
 
-        private RegistrationRequest(String login, String password, String email, String repeatPassword) {
+        private RegistrationRequest(String login, String password, String email) {
             this.login = login;
             this.password = password;
             this.email = email;
-            this.repeatPassword = repeatPassword;
-
-        }
-
-        public String getRepeatPassword() {
-            return repeatPassword;
         }
 
         public String getLogin() {

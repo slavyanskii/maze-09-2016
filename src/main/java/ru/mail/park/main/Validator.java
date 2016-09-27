@@ -8,63 +8,36 @@ import org.springframework.util.StringUtils;
 /**
  * Created by kirrok on 26.09.16.
  */
-public class Validator {
+public final class Validator {
     @JsonProperty
-    private final boolean loginIsOk;
+    private final boolean loginValid;
     @JsonProperty
-    private final boolean passwordIsOk;
+    private final boolean passwordValid;
     @JsonProperty
-    private final boolean repeatPasswordIsOk;
-    @JsonProperty
-    private final boolean emailIsOk;
+    private boolean emailValid = true;
 
-    public static class Builder {
-        private boolean loginIsOk;
-        private boolean passwordIsOk;
-        private boolean emailIsOk;
-        private boolean repeatPasswordIsOk;
-
-        public Builder(String login, String password) {
-            this.loginIsOk = !StringUtils.isEmpty(login);
-            this.passwordIsOk = !StringUtils.isEmpty(password);
-        }
-
-        public Builder repeatPassword(String repeatPassword) {
-            this.repeatPasswordIsOk = !StringUtils.isEmpty(repeatPassword);
-            return this;
-        }
-
-        public Builder email(String email) {
-            this.emailIsOk = !StringUtils.isEmpty(email);
-            return this;
-        }
-
-        public Validator build() {
-            return new Validator(this);
-        }
+    public Validator(String login, String password) {
+        this.loginValid = !StringUtils.isEmpty(login);
+        this.passwordValid = !StringUtils.isEmpty(password);
     }
 
-    private Validator(Builder builder) {
-        loginIsOk = builder.loginIsOk;
-        passwordIsOk = builder.passwordIsOk;
-        repeatPasswordIsOk = builder.repeatPasswordIsOk;
-        emailIsOk = builder.emailIsOk;
+    public Validator(String login, String password, String email) {
+        this.loginValid = !StringUtils.isEmpty(login);
+        this.passwordValid = !StringUtils.isEmpty(password);
+        this.emailValid = !StringUtils.isEmpty(email);
     }
-
 
     public boolean isValid() {
-        return loginIsOk && passwordIsOk && repeatPasswordIsOk && emailIsOk ;
+        return loginValid && passwordValid && emailValid;
     }
 
-    public String StatusAsJson() {
+    public String validationStatusAsJson() {
         final ObjectMapper mapper = new ObjectMapper();
         try {
-            System.out.print(mapper.writeValueAsString(this));
-
-            return "";
+            return mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
-            return "Convert exception";
         }
+        return "";
     }
 }
