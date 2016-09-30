@@ -24,7 +24,7 @@ public class RegistrationController {
         this.sessionService = sessionService;
     }
 
-    @RequestMapping(path = "/registration", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/registration", method = RequestMethod.POST)
     public ResponseEntity login(@RequestBody RegistrationRequest body) {
 
         final String login = body.getLogin();
@@ -46,7 +46,7 @@ public class RegistrationController {
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 
-    @RequestMapping(path = "/auth", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody AuthorizationRequest body) {
 
         final String login = body.getLogin();
