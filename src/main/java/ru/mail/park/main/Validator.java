@@ -5,9 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.util.StringUtils;
 
-/**
- * Created by kirrok on 26.09.16.
- */
 public final class Validator {
     @JsonProperty
     private final boolean loginValid;

@@ -4,24 +4,20 @@ import org.springframework.stereotype.Service;
 import ru.mail.park.model.UserProfile;
 
 import javax.servlet.http.HttpSession;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
-/**
- * ДЗ: реализовать класс, который по соответствующему id сессии будет отдавать пользователей(т.е. реализовать авторизацию по сессии)
- */
+
 @Service
 public class SessionService {
 
-    private Map<String, UserProfile> userNameToUser = new HashMap<>();
+    private Map<String, UserProfile> sessionIdToUser = new ConcurrentHashMap<>();
 
-    public UserProfile addUser(String login, String password, String email) {
-        final UserProfile userProfile = new UserProfile(login, email, password);
-        userNameToUser.put(login, userProfile);
-        return userProfile;
+    public void addUser(String sessionId, UserProfile user) {
+        sessionIdToUser.put(sessionId, user);
     }
+
     public UserProfile getUser(String login) {
-        return userNameToUser.get(login);
+        return sessionIdToUser.get(login);
     }
-    //To be done
 }

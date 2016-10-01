@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
+import ru.mail.park.exceptions.*;
+
+import javax.servlet.http.HttpSession;
 
 /**
  * Created by Solovyev on 06/09/16.
@@ -24,22 +27,24 @@ public class RegistrationController {
         this.sessionService = sessionService;
     }
 
-    @RequestMapping(path = "/api/registration", method = RequestMethod.POST)
-    public ResponseEntity login(@RequestBody RegistrationRequest body) {
+    @RequestMapping(path = "/api/registration",
+            method = RequestMethod.POST, consumes = "application/json")
+    public ResponseEntity login(@RequestBody RegistrationRequest body,
+                                HttpSession httpSession) throws CustomException {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
-
         final Validator validator = new Validator(login, password, email);
 
         if (!validator.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
+            throw new CustomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
         }
 
         final UserProfile existingUser = accountService.getUser(login);
+
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"User already exists\"}");
+            throw new CustomException(HttpStatus.CONFLICT, "User already exists.");
         }
 
         accountService.addUser(login, password, email);
@@ -47,23 +52,24 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody AuthorizationRequest body) {
+    public ResponseEntity auth(@RequestBody AuthorizationRequest body,
+                               HttpSession httpSession) throws CustomException{
 
         final String login = body.getLogin();
         final String password = body.getPassword();
-
         final Validator validator = new Validator(login, password);
 
         if (!validator.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
+            throw new CustomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
         }
 
         final UserProfile user = accountService.getUser(login);
 
-        if (user != null && user.getPassword().equals(password)) {
-            return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
+        if (user == null || !user.getPassword().equals(password)) {
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "Wrong login or password.");
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"Wrong login or password.\"}");
+        sessionService.addUser(httpSession.getId(), user);
+        return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
     private static final class AuthorizationRequest {
