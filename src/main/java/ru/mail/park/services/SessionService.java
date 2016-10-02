@@ -13,15 +13,13 @@ import java.util.Map;
 @Service
 public class SessionService {
 
-    private Map<String, UserProfile> userNameToUser = new HashMap<>();
+    private Map<String, UserProfile> sessionIdToUser = new HashMap<>();
 
-    public UserProfile addUser(String login, String password, String email) {
-        final UserProfile userProfile = new UserProfile(login, email, password);
-        userNameToUser.put(login, userProfile);
-        return userProfile;
+    public void addUser(String sessionId, UserProfile user) {
+        sessionIdToUser.put(sessionId, user);
     }
+
     public UserProfile getUser(String login) {
-        return userNameToUser.get(login);
+        return sessionIdToUser.get(login);
     }
-    //To be done
 }
