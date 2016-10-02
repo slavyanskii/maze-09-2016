@@ -66,6 +66,7 @@ public class RegistrationController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
         }
 
+        //// TODO: 02.10.16 why i even need thos session thing ask me anything
         final UserProfile user = accountService.getUser(login);
         sessionService.addUser(httpSession.getId(), user);
 
