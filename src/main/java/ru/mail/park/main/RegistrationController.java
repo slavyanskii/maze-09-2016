@@ -45,7 +45,7 @@ public class RegistrationController {
 
         final UserProfile existingUser = accountService.getUser(login);
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{ User already exists }");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"User already exists\"}");
         }
 
         accountService.addUser(login, password, email);
@@ -72,7 +72,7 @@ public class RegistrationController {
         if (user != null && user.getPassword().equals(password)) {
             return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{ Wrong login or password. }");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"Wrong login or password.\"}");
     }
 
     private static final class AuthorizationRequest {
