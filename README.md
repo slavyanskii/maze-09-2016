@@ -1,5 +1,7 @@
 {
 
+   https://travis-ci.org/slavyanskii/maze-09-2016.svg?branch=master
+
    Название команды: "Brain404",
    
    Участники проекта: [
