@@ -37,13 +37,11 @@ public class RegistrationController {
         final Validator validator = new Validator(login, password, email);
 
         if (!validator.isValid()) {
-            throw new GlobalException(HttpStatus.BAD_REQUEST,validator.validationStatusAsJson()); //наш эксепшн который мы можем крутить как хотим
-            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
+            throw new CastomException(HttpStatus.BAD_REQUEST,validator.validationStatusAsJson()); //наш эксепшн который мы можем крутить как хотим
         }
         final UserProfile existingUser = accountService.getUser(login);
         if (existingUser != null) {
-            throw new GlobalException(HttpStatus.CONFLICT,"{\"User already exists\"}"); //наш эксепшн который мы можем крутить как хотим
-            //return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"User already exists\"}");
+            throw new CastomException(HttpStatus.CONFLICT,"User already exists.");
         }
 
         accountService.addUser(login, password, email);
@@ -59,18 +57,16 @@ public class RegistrationController {
         final Validator validator = new Validator(login, password);
 
         if (!validator.isValid()) {
-            throw new GlobalException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
-            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
+            throw new CastomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
         }
 
         final UserProfile user = accountService.getUser(login);
-        sessionService.addUser(httpSession.getId(), user);
 
         if (user != null && user.getPassword().equals(password)) {
+            sessionService.addUser(httpSession.getId(), user);
             return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
         }
-        throw new GlobalException(HttpStatus.UNAUTHORIZED, "{\"Wrong login or password.\"}");
-        //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"Wrong login or password.\"}");
+        throw new CastomException(HttpStatus.UNAUTHORIZED, "Wrong login or password.");
     }
 
     private static final class AuthorizationRequest {

@@ -13,12 +13,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
-    @ExceptionHandler(GlobalException.class)
-    public ResponseEntity handleGlobalException(GlobalException e) {
+    @ExceptionHandler(CastomException.class)             //castom exception with error and body for my needs
+    public ResponseEntity handleGlobalException(CastomException e) {
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
-    @ExceptionHandler(HttpMessageNotReadableException.class)  //testing global ExceptionHandler
+    @ExceptionHandler(HttpMessageNotReadableException.class)  //testing global ExceptionHandler for Bad Request
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity handleGlobalException() {
         final ErrorMsg errorMsg = new ErrorMsg(HttpStatus.BAD_REQUEST.toString(),"Wrong data in Request");
