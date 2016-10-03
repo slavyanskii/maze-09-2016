@@ -27,10 +27,11 @@ public class UserProfile {
         return password;
     }
 
+    @SuppressWarnings("unused")
     public String getEmail() {
         return email;
     }
-
+    @SuppressWarnings("unused")
     public Long getId() {
         return id;
     }

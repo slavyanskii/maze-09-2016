@@ -27,10 +27,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/api/registration", method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity login(@RequestBody RegistrationRequest body,
-                                HttpSession httpSession) {
-
-        final String sessionId = httpSession.getId(); // зачем сессия при регистрации?
+    public ResponseEntity login(@RequestBody RegistrationRequest body) {
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
@@ -73,9 +70,11 @@ public class RegistrationController {
         private String login;
         private String password;
 
+        @SuppressWarnings("unused")
         private AuthorizationRequest() {
         }
 
+        @SuppressWarnings("unused")
         private AuthorizationRequest(String login, String password) {
             this.login = login;
             this.password = password;
@@ -95,9 +94,11 @@ public class RegistrationController {
         private String password;
         private String email;
 
+        @SuppressWarnings("unused")
         private RegistrationRequest() {
         }
 
+        @SuppressWarnings("unused")
         private RegistrationRequest(String login, String password, String email) {
             this.login = login;
             this.password = password;

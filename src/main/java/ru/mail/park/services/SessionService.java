@@ -3,7 +3,6 @@ package ru.mail.park.services;
 import org.springframework.stereotype.Service;
 import ru.mail.park.model.UserProfile;
 
-import javax.servlet.http.HttpSession;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.Map;
 
@@ -17,7 +16,13 @@ public class SessionService {
         sessionIdToUser.put(sessionId, user);
     }
 
-    public UserProfile getUser(String login) {
+    @SuppressWarnings("unused")
+    public UserProfile getUserByLogin(String login) {
         return sessionIdToUser.get(login);
+    }
+
+    @SuppressWarnings("unused")
+    public UserProfile getUserBySession(String sessionId) {
+        return sessionIdToUser.get(sessionId);
     }
 }
