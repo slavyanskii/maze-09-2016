@@ -34,11 +34,11 @@ public class RegistrationController {
         final Validator validator = new Validator(login, password, email);
 
         if (!validator.isValid()) {
-            throw new CastomException(HttpStatus.BAD_REQUEST,validator.validationStatusAsJson()); //наш эксепшн который мы можем крутить как хотим
+            throw new CustomException(HttpStatus.BAD_REQUEST,validator.validationStatusAsJson()); //наш эксепшн который мы можем крутить как хотим
         }
         final UserProfile existingUser = accountService.getUser(login);
         if (existingUser != null) {
-            throw new CastomException(HttpStatus.CONFLICT,"User already exists.");
+            throw new CustomException(HttpStatus.CONFLICT,"User already exists.");
         }
 
         accountService.addUser(login, password, email);
@@ -54,7 +54,7 @@ public class RegistrationController {
         final Validator validator = new Validator(login, password);
 
         if (!validator.isValid()) {
-            throw new CastomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
+            throw new CustomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
         }
 
         final UserProfile user = accountService.getUser(login);
@@ -63,7 +63,7 @@ public class RegistrationController {
             sessionService.addUser(httpSession.getId(), user);
             return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
         }
-        throw new CastomException(HttpStatus.UNAUTHORIZED, "Wrong login or password.");
+        throw new CustomException(HttpStatus.UNAUTHORIZED, "Wrong login or password.");
     }
 
     private static final class AuthorizationRequest {

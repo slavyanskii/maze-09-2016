@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 
-    @ExceptionHandler(CastomException.class)             //castom exception with error and body for my needs
-    public ResponseEntity handleGlobalException(CastomException e) {
+    @ExceptionHandler(CustomException.class)             //castom exception with error and body for my needs
+    public ResponseEntity handleGlobalException(CustomException e) {
         return ResponseEntity.status(e.getHttpStatus()).body(e.getMessage());
     }
 
