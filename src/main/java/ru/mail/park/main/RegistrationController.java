@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
-
+import ru.mail.park.exceptions.*;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -30,22 +30,20 @@ public class RegistrationController {
     public ResponseEntity login(@RequestBody RegistrationRequest body,
                                 HttpSession httpSession) {
 
-        final String sessionId = httpSession.getId(); //todo dafaq this need to be here?
-
+        final String sessionId = httpSession.getId(); // зачем сессия при регистрации?
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
-
-        //todo create throw exception thing
         final Validator validator = new Validator(login, password, email);
 
         if (!validator.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
+            throw new GlobalException(HttpStatus.BAD_REQUEST,validator.validationStatusAsJson()); //наш эксепшн который мы можем крутить как хотим
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
         }
-
         final UserProfile existingUser = accountService.getUser(login);
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"User already exists\"}");
+            throw new GlobalException(HttpStatus.CONFLICT,"{\"User already exists\"}"); //наш эксепшн который мы можем крутить как хотим
+            //return ResponseEntity.status(HttpStatus.CONFLICT).body("{\"User already exists\"}");
         }
 
         accountService.addUser(login, password, email);
@@ -58,22 +56,21 @@ public class RegistrationController {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
-
-        //todo throw exception thing and validation
         final Validator validator = new Validator(login, password);
 
         if (!validator.isValid()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
+            throw new GlobalException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
+            //return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(validator.validationStatusAsJson());
         }
 
-        //// TODO: 02.10.16 why i even need thos session thing ask me anything
         final UserProfile user = accountService.getUser(login);
         sessionService.addUser(httpSession.getId(), user);
 
         if (user != null && user.getPassword().equals(password)) {
             return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"Wrong login or password.\"}");
+        throw new GlobalException(HttpStatus.UNAUTHORIZED, "{\"Wrong login or password.\"}");
+        //return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("{\"Wrong login or password.\"}");
     }
 
     private static final class AuthorizationRequest {
