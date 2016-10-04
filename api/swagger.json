@@ -1,0 +1,156 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is a sample server for game.  You can find out more about our game in private msg",
+    "version": "0.0.0.1c-beta",
+    "title": "Brain404-TheGame"
+  },
+  "host": "brain404-backend.herokuapp.com",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "registration",
+      "description": "Operation about registration"
+    },
+    {
+      "name": "auth",
+      "description": "Authorization"
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/registration": {
+      "post": {
+        "tags": [
+          "registration"
+        ],
+        "summary": "Add a new user to the game server",
+        "description": "Register new user",
+        "operationId": "addUser",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "RegistrationRequst object with login, password and email",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/RegistrationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Huge Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Error message."
+          },
+          "409": {
+            "description": "User already exists."
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "User authorization",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "AuthorizationRequest object with login, password",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/AuthorizationRequest"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Huge Success",
+            "schema": {
+              "$ref": "#/definitions/SuccessResponse"
+            }
+          },
+          "400": {
+            "description": "Error message."
+          },
+          "409": {
+            "description": "User already exists."
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "RegistrationRequest": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        }
+      }
+    },
+    "AuthorizationRequest": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "SuccessResponse": {
+      "type": "object",
+      "properties": {
+        "login": {
+          "type": "string"
+        }
+      }
+    },
+    "UserProfile": {
+      "type": "object",
+      "properties": {
+        "fake_id_db": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "login": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
