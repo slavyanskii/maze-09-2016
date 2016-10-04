@@ -6,7 +6,7 @@
     "title": "Brain404-TheGame"
   },
   "host": "maze-backend.herokuapp.com",
-  "basePath": "/api/v0.1",
+  "basePath": "/api",
   "tags": [
     {
       "name": "registration",
@@ -21,7 +21,7 @@
     "http"
   ],
   "paths": {
-    "/api/registration": {
+    "/registration": {
       "post": {
         "tags": [
           "registration"
@@ -62,7 +62,7 @@
         }
       }
     },
-    "/api/auth": {
+    "/auth": {
       "post": {
         "tags": [
           "auth"
