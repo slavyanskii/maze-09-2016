@@ -27,7 +27,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/api/registration", method = RequestMethod.POST, consumes = "application/json")
-    public ResponseEntity login(@RequestBody RegistrationRequest body) {
+    public ResponseEntity login(@RequestBody RegistrationRequest body) throws CustomException {
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
