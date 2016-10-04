@@ -5,7 +5,7 @@
     "version": "0.0.0.1c-beta",
     "title": "Brain404-TheGame"
   },
-  "host": "http://maze-backend.herokuapp.com",
+  "host": "maze-backend.herokuapp.com",
   "basePath": "/api/v0.1",
   "tags": [
     {
@@ -73,6 +73,7 @@
         ],
         "parameters": [
           {
+            "in": "body",
             "name": "body",
             "description": "AuthorizationRequest object with login, password",
             "required": true,
@@ -138,8 +139,9 @@
     "UserProfile": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "long"
+        "fake_id_db": {
+          "type": "integer",
+          "format": "int64"
         },
         "login": {
           "type": "string"

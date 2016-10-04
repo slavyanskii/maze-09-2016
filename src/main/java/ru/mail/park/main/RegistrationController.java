@@ -26,7 +26,7 @@ public class RegistrationController {
         this.sessionService = sessionService;
     }
 
-    @RequestMapping(path = "/api/registration", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(path = "/ru/mail/park/api/registration", method = RequestMethod.POST, consumes = "application/json")
     public ResponseEntity login(@RequestBody RegistrationRequest body) throws CustomException {
         final String login = body.getLogin();
         final String password = body.getPassword();
@@ -45,7 +45,7 @@ public class RegistrationController {
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 
-    @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
+    @RequestMapping(path = "/ru/mail/park/api/auth", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody AuthorizationRequest body,
                                HttpSession httpSession) {
 
