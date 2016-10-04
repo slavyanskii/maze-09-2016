@@ -30,11 +30,12 @@ public final class Validator {
 
     public String validationStatusAsJson() {
         final ObjectMapper mapper = new ObjectMapper();
+        String statusJson = "";
         try {
-            return mapper.writeValueAsString(this);
+            statusJson = mapper.writeValueAsString(this);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-        return "";
+        return statusJson;
     }
 }
