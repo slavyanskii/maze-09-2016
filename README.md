@@ -2,7 +2,7 @@
 
    Название команды: "Brain404",
 
-   ### API (idk why curls from swagger-ui broken)
+   ### API
    [https://api-back.herokuapp.com/](https://api-back.herokuapp.com/)
    
    Участники проекта: [

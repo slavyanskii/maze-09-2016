@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
-import ru.mail.park.exceptions.*;
-
 import javax.servlet.http.HttpSession;
 
 /**
@@ -27,9 +25,8 @@ public class RegistrationController {
         this.sessionService = sessionService;
     }
 
-    @RequestMapping(path = "/api/registration",
-            method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity registration(@RequestBody RegistrationRequest body) throws CustomException {
+    @RequestMapping(path = "/api/registration", method = RequestMethod.POST)
+    public ResponseEntity registration(@RequestBody RegistrationRequest body){
 
         final String login = body.getLogin();
         final String password = body.getPassword();
@@ -37,35 +34,35 @@ public class RegistrationController {
         final Validator validator = new Validator(login, password, email);
 
         if (!validator.isValid()) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{invalid}");
         }
 
         final UserProfile existingUser = accountService.getUser(login);
 
         if (existingUser != null) {
-            throw new CustomException(HttpStatus.CONFLICT, "{\"msq\":\"User already exists\"}");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("{User already exists.}");
         }
 
         accountService.addUser(login, password, email);
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 
-    @RequestMapping(path = "/api/auth", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity auth(@RequestBody AuthorizationRequest body, HttpSession httpSession)
-            throws CustomException {
+    @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
+    public ResponseEntity auth(@RequestBody AuthorizationRequest body,
+                               HttpSession httpSession) {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
         final Validator validator = new Validator(login, password);
 
         if (!validator.isValid()) {
-            throw new CustomException(HttpStatus.BAD_REQUEST, validator.validationStatusAsJson());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid");
         }
 
         final UserProfile user = accountService.getUser(login);
 
         if (user == null || !user.getPassword().equals(password)) {
-            throw new CustomException(HttpStatus.UNAUTHORIZED, "Wrong login or password");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("{User already exists.}");
         }
         sessionService.addUser(httpSession.getId(), user);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
