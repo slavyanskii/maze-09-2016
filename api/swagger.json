@@ -58,7 +58,7 @@
           "400": {
             "description": "Error message."
           },
-          "409": {
+          "404": {
             "description": "User already exists."
           }
         }
@@ -95,7 +95,7 @@
           "400": {
             "description": "Error message."
           },
-          "409": {
+          "404": {
             "description": "User already exists."
           }
         }
