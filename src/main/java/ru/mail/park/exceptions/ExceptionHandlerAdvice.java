@@ -18,5 +18,4 @@ public class ExceptionHandlerAdvice {
         Application.logger.error(e);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{Server error}");
     }
-
 }

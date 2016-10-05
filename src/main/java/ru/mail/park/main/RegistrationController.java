@@ -3,10 +3,12 @@ package ru.mail.park.main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
+
 import javax.servlet.http.HttpSession;
 
 /**
@@ -26,14 +28,14 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/api/registration", method = RequestMethod.POST)
-    public ResponseEntity registration(@RequestBody RegistrationRequest body){
+    public ResponseEntity registration(@RequestBody RegistrationRequest body) {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
         final String email = body.getEmail();
-        final Validator validator = new Validator(login, password, email);
 
-        if (!validator.isValid()) {
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) ||
+                StringUtils.isEmpty(email)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{invalid}");
         }
 
@@ -53,16 +55,15 @@ public class RegistrationController {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
-        final Validator validator = new Validator(login, password);
 
-        if (!validator.isValid()) {
+        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid");
         }
 
         final UserProfile user = accountService.getUser(login);
 
         if (user == null || !user.getPassword().equals(password)) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("{User already exists.}");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("{Wrong login or password.}");
         }
         sessionService.addUser(httpSession.getId(), user);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
