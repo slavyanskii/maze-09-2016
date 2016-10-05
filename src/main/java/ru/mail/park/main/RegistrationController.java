@@ -28,7 +28,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/api/registration",
-            method = RequestMethod.POST, consumes = "application/json")
+            method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity registration(@RequestBody RegistrationRequest body) throws CustomException {
 
         final String login = body.getLogin();
@@ -43,14 +43,14 @@ public class RegistrationController {
         final UserProfile existingUser = accountService.getUser(login);
 
         if (existingUser != null) {
-            throw new CustomException(HttpStatus.CONFLICT, "User already exists.");
+            throw new CustomException(HttpStatus.CONFLICT, "{\"msq\":\"User already exists\"}");
         }
 
         accountService.addUser(login, password, email);
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 
-    @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
+    @RequestMapping(path = "/api/auth", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity auth(@RequestBody AuthorizationRequest body, HttpSession httpSession)
             throws CustomException {
 
@@ -65,7 +65,7 @@ public class RegistrationController {
         final UserProfile user = accountService.getUser(login);
 
         if (user == null || !user.getPassword().equals(password)) {
-            throw new CustomException(HttpStatus.UNAUTHORIZED, "Wrong login or password.");
+            throw new CustomException(HttpStatus.UNAUTHORIZED, "Wrong login or password");
         }
         sessionService.addUser(httpSession.getId(), user);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
