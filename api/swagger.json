@@ -58,7 +58,7 @@
           "400": {
             "description": "Error message."
           },
-          "404": {
+          "406": {
             "description": "User already exists."
           }
         }
@@ -95,8 +95,8 @@
           "400": {
             "description": "Error message."
           },
-          "404": {
-            "description": "User already exists."
+          "406": {
+            "description": "Invalid login or password."
           }
         }
       }
