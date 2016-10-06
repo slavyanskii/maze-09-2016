@@ -34,7 +34,8 @@
           "application/json"
         ],
         "produces": [
-          "application/json"
+          "application/json",
+          "text/html"
         ],
         "parameters": [
           {
@@ -55,10 +56,16 @@
             }
           },
           "400": {
-            "description": "Error message."
+            "description": "Error message.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
-          "409": {
-            "description": "User already exists."
+          "406": {
+            "description": "User already exists.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -70,7 +77,8 @@
         ],
         "summary": "User authorization",
         "produces": [
-          "application/json"
+          "application/json",
+          "text/html"
         ],
         "parameters": [
           {
@@ -91,10 +99,16 @@
             }
           },
           "400": {
-            "description": "Error message."
+            "description": "Error message.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           },
-          "409": {
-            "description": "User already exists."
+          "406": {
+            "description": "Invalid login or password.",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         }
       }
@@ -130,6 +144,17 @@
       "type": "object",
       "properties": {
         "login": {
+          "type": "string"
+        }
+      }
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "error": {
+          "type": "string"
+        },
+        "msg": {
           "type": "string"
         }
       }

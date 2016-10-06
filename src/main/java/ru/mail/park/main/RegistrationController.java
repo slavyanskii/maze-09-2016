@@ -36,13 +36,13 @@ public class RegistrationController {
 
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) ||
                 StringUtils.isEmpty(email)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("{invalid}");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(),"Invalid input"));
         }
 
         final UserProfile existingUser = accountService.getUser(login);
 
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("{User already exists.}");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponse(HttpStatus.NOT_ACCEPTABLE.toString(),"User already exist"));
         }
 
         accountService.addUser(login, password, email);
@@ -57,13 +57,14 @@ public class RegistrationController {
         final String password = body.getPassword();
 
         if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("invalid");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(),"Invalid input"));
         }
 
         final UserProfile user = accountService.getUser(login);
 
         if (user == null || !user.getPassword().equals(password)) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body("{Wrong login or password.}");
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponse(HttpStatus.NOT_ACCEPTABLE.toString(), "Wrong login or password"));
+
         }
         sessionService.addUser(httpSession.getId(), user);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
@@ -127,6 +128,32 @@ public class RegistrationController {
         @SuppressWarnings("unused")
         public String getLogin() {
             return login;
+        }
+    }
+
+    private static final class ErrorResponse {
+        private String msg;
+        private String error;
+
+        private ErrorResponse(String error, String msg) {
+            this.msg = msg;
+            this.error = error;
+        }
+
+        public String getMsg() {
+            return msg;
+        }
+
+        public void setMsg(String msg) {
+            this.msg = msg;
+        }
+
+        public String getError() {
+            return error;
+        }
+
+        public void setError(String error) {
+            this.error = error;
         }
     }
 
