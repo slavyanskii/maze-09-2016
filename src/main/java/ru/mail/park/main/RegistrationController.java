@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import ru.mail.park.exceptions.ErrorResponse;
 import ru.mail.park.model.UserProfile;
 import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
@@ -130,31 +131,4 @@ public class RegistrationController {
             return login;
         }
     }
-
-    private static final class ErrorResponse {
-        private String msg;
-        private String error;
-
-        private ErrorResponse(String error, String msg) {
-            this.msg = msg;
-            this.error = error;
-        }
-
-        public String getMsg() {
-            return msg;
-        }
-
-        public void setMsg(String msg) {
-            this.msg = msg;
-        }
-
-        public String getError() {
-            return error;
-        }
-
-        public void setError(String error) {
-            this.error = error;
-        }
-    }
-
 }
