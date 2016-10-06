@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.mail.park.Application;
-import ru.mail.park.main.RegistrationController;
 
 /**
  * Created by viacheslav on 03.10.16.
