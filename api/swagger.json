@@ -34,8 +34,7 @@
           "application/json"
         ],
         "produces": [
-          "application/json",
-          "text/html"
+          "application/json"
         ],
         "parameters": [
           {
@@ -77,8 +76,7 @@
         ],
         "summary": "User authorization",
         "produces": [
-          "application/json",
-          "text/html"
+          "application/json"
         ],
         "parameters": [
           {
