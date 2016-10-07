@@ -50,6 +50,16 @@ public class RegistrationController {
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 
+    @RequestMapping(path = "/api/session", method = RequestMethod.GET)
+    public ResponseEntity sessionCheck(@RequestBody HttpSession httpSession){
+        final UserProfile user = accountService.getUser(httpSession.getId());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.toString(),"Not logged in"));
+        }
+        return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
+    }
+
+
     @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody AuthorizationRequest body,
                                HttpSession httpSession) {
