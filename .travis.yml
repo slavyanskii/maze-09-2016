@@ -11,3 +11,5 @@ deploy:
 branches:
   only:
   - master
+
+  //kek test
