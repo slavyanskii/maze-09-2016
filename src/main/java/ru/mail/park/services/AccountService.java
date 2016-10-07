@@ -15,7 +15,7 @@ public class AccountService {
         userNameToUser.put(login, userProfile);
         return userProfile;
     }
-    public UserProfile getUser(String login) {
+    public final UserProfile getUser(String login) {
         return userNameToUser.get(login);
     }
 }
