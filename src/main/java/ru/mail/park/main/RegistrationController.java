@@ -11,6 +11,8 @@ import ru.mail.park.services.AccountService;
 import ru.mail.park.services.SessionService;
 
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by Solovyev on 06/09/16.
@@ -28,30 +30,8 @@ public class RegistrationController {
         this.sessionService = sessionService;
     }
 
-    @RequestMapping(path = "/api/registration", method = RequestMethod.POST)
-    public ResponseEntity registration(@RequestBody RegistrationRequest body) {
-
-        final String login = body.getLogin();
-        final String password = body.getPassword();
-        final String email = body.getEmail();
-
-        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password) ||
-                StringUtils.isEmpty(email)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(),"Invalid input"));
-        }
-
-        final UserProfile existingUser = accountService.getUser(login);
-
-        if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponse(HttpStatus.NOT_ACCEPTABLE.toString(),"User already exist"));
-        }
-
-        accountService.addUser(login, password, email);
-        return ResponseEntity.ok(new SuccessResponse(login));
-    }
-
-    @RequestMapping(path = "/api/session", method = RequestMethod.GET)
-    public ResponseEntity sessionCheck(@RequestBody HttpSession httpSession){
+    @RequestMapping(path = "/session", method = RequestMethod.GET)
+    public ResponseEntity sessionCheck(HttpSession httpSession){
         final UserProfile user = accountService.getUser(httpSession.getId());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.toString(),"Not logged in"));
@@ -59,38 +39,48 @@ public class RegistrationController {
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
+    @RequestMapping(path = "/registration", method = RequestMethod.POST)
+    public ResponseEntity registration(@RequestBody @Valid RegistrationRequest body) {
 
-    @RequestMapping(path = "/api/auth", method = RequestMethod.POST)
-    public ResponseEntity auth(@RequestBody AuthorizationRequest body,
+        final String login = body.getLogin();
+        final String password = body.getPassword();
+        final String email = body.getEmail();
+
+        final UserProfile existingUser = accountService.getUser(login);
+
+        if (existingUser != null) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                    .body(new ErrorResponse(HttpStatus.NOT_ACCEPTABLE.toString(),ErrorResponse.USER_ALREADY_EXISTS));
+        }
+
+        accountService.addUser(login, password, email);
+        return ResponseEntity.ok(new SuccessResponse(login));
+    }
+
+    @RequestMapping(path = "/auth", method = RequestMethod.POST)
+    public ResponseEntity auth(@RequestBody @Valid AuthorizationRequest body,
                                HttpSession httpSession) {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
 
-        if (StringUtils.isEmpty(login) || StringUtils.isEmpty(password)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(HttpStatus.BAD_REQUEST.toString(),"Invalid input"));
-        }
-
         final UserProfile user = accountService.getUser(login);
 
         if (user == null || !user.getPassword().equals(password)) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new ErrorResponse(HttpStatus.NOT_ACCEPTABLE.toString(), "Wrong login or password"));
-
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.AUTHORIZATION_ERROR));
         }
         sessionService.addUser(httpSession.getId(), user);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
     private static final class AuthorizationRequest {
+        @NotNull
         private String login;
+        @NotNull
         private String password;
 
         private AuthorizationRequest() {
-        }
-
-        private AuthorizationRequest(String login, String password) {
-            this.login = login;
-            this.password = password;
         }
 
         public String getLogin() {
@@ -103,17 +93,14 @@ public class RegistrationController {
     }
 
     private static final class RegistrationRequest {
+        @NotNull
         private String login;
+        @NotNull
         private String password;
+        @NotNull
         private String email;
 
         private RegistrationRequest() {
-        }
-
-        private RegistrationRequest(String login, String password, String email) {
-            this.login = login;
-            this.password = password;
-            this.email = email;
         }
 
         public String getLogin() {

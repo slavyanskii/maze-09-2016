@@ -1,6 +1,12 @@
 package ru.mail.park.exceptions;
 
 public class ErrorResponse {
+
+    public static final String VALIDATION_ERROR = "Invalid input";
+    public static final String USER_ALREADY_EXISTS = "User already exists";
+    public static final String SERVER_ERROR = "Server error";
+    public static final String AUTHORIZATION_ERROR = "Wrong login or password";
+
     private String msg;
     private String error;
 
