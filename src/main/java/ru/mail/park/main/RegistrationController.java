@@ -3,12 +3,11 @@ package ru.mail.park.main;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.mail.park.exceptions.ErrorResponse;
-import ru.mail.park.model.UserProfile;
-import ru.mail.park.services.AccountService;
-import ru.mail.park.services.SessionService;
+import ru.mail.park.dataSets.UserDataSet;
+import ru.mail.park.services.impl.AccountServiceImpl;
+import ru.mail.park.services.impl.SessionServiceImpl;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
@@ -20,21 +19,23 @@ import javax.validation.constraints.NotNull;
 
 @RestController
 public class RegistrationController {
-    private final AccountService accountService;
-    private final SessionService sessionService;
+    private final AccountServiceImpl accountService;
+    private final SessionServiceImpl sessionService;
 
     @Autowired
-    public RegistrationController(AccountService accountService,
-                                  SessionService sessionService) {
+    public RegistrationController(AccountServiceImpl accountService,
+                                  SessionServiceImpl sessionService) {
         this.accountService = accountService;
         this.sessionService = sessionService;
     }
 
     @RequestMapping(path = "/session", method = RequestMethod.GET)
-    public ResponseEntity sessionCheck(HttpSession httpSession){
-        final UserProfile user = accountService.getUser(httpSession.getId());
+    public ResponseEntity sessionCheck(HttpSession session) {
+
+        final UserDataSet user = sessionService.getUser(session);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ErrorResponse(HttpStatus.BAD_GATEWAY.toString(),"Not logged in"));
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.NOT_LOGGED_IN_MSG));
         }
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
@@ -46,31 +47,30 @@ public class RegistrationController {
         final String password = body.getPassword();
         final String email = body.getEmail();
 
-        final UserProfile existingUser = accountService.getUser(login);
+        final UserDataSet existingUser = accountService.getUser(login);
 
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
-                    .body(new ErrorResponse(HttpStatus.NOT_ACCEPTABLE.toString(),ErrorResponse.USER_ALREADY_EXISTS));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(new ErrorResponse(HttpStatus.FORBIDDEN.toString(), ErrorResponse.USER_ALREADY_EXISTS_MSG));
         }
-
         accountService.addUser(login, password, email);
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 
     @RequestMapping(path = "/auth", method = RequestMethod.POST)
     public ResponseEntity auth(@RequestBody @Valid AuthorizationRequest body,
-                               HttpSession httpSession) {
+                               HttpSession session) {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
 
-        final UserProfile user = accountService.getUser(login);
+        final UserDataSet user = accountService.getUser(login);
 
         if (user == null || !user.getPassword().equals(password)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.AUTHORIZATION_ERROR));
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.AUTHORIZATION_ERROR_MSG));
         }
-        sessionService.addUser(httpSession.getId(), user);
+        sessionService.addUser(session, user);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
@@ -123,7 +123,6 @@ public class RegistrationController {
             this.login = login;
         }
 
-        @SuppressWarnings("unused")
         public String getLogin() {
             return login;
         }

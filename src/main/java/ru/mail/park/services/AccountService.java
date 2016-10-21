@@ -1,21 +1,14 @@
 package ru.mail.park.services;
 
-import org.springframework.stereotype.Service;
-import ru.mail.park.model.UserProfile;
+import ru.mail.park.dataSets.UserDataSet;
 
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
+/**
+ * Created by kirrok on 21.10.16.
+ */
+public interface AccountService {
+    void addUser(String login, String password, String email);
 
-@Service
-public class AccountService {
-    private Map<String, UserProfile> userNameToUser = new ConcurrentHashMap<>();
+    UserDataSet getUser(String email);
 
-    public UserProfile addUser(String login, String password, String email) {
-        final UserProfile userProfile = new UserProfile(login, email, password);
-        userNameToUser.put(login, userProfile);
-        return userProfile;
-    }
-    public UserProfile getUser(String login) {
-        return userNameToUser.get(login);
-    }
+    void updateUser(UserDataSet user);
 }

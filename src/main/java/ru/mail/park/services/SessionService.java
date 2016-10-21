@@ -1,23 +1,15 @@
 package ru.mail.park.services;
 
-import org.springframework.stereotype.Service;
-import ru.mail.park.model.UserProfile;
+import ru.mail.park.dataSets.UserDataSet;
 
 import javax.servlet.http.HttpSession;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.Map;
 
+/**
+ * Created by kirrok on 21.10.16.
+ */
+public interface SessionService {
 
-@Service
-public class SessionService {
+    public void addUser(HttpSession session, UserDataSet user);
 
-    private Map<String, UserProfile> sessionIdToUser = new ConcurrentHashMap<>();
-
-    public void addUser(String sessionId, UserProfile user) {
-        sessionIdToUser.put(sessionId, user);
-    }
-
-    public UserProfile getUser(String login) {
-        return sessionIdToUser.get(login);
-    }
+    public UserDataSet getUser(HttpSession session);
 }
