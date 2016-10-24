@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mail.park.Application;
 import ru.mail.park.dataSets.UserDataSet;
 import ru.mail.park.repositories.SessionDAO;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpSession;
 
 
 @Service
+@Transactional
 public class SessionServiceImpl implements SessionService {
     SessionDAO sessionDAO;
     UserDAO userDAO;
