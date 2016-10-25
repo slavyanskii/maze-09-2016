@@ -10,5 +10,5 @@ deploy:
     repo: slavyanskii/maze-09-2016
 branches:
   only:
-    - development
+    - lol
     - master
