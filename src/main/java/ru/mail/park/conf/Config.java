@@ -15,7 +15,7 @@ public class Config {
 
     @Bean
     public BasicDataSource dataSource() throws URISyntaxException {
-        final URI dbUri = new URI(System.getenv("CLEARDB_DATABASE_URL"));
+        final URI dbUri = new URI(System.getenv("JAWSDB_URL"));
 
         final String username = dbUri.getUserInfo().split(":")[0];
         final String password = dbUri.getUserInfo().split(":")[1];
