@@ -16,11 +16,9 @@ import java.util.Date;
 @Repository
 public class SessionDAO {
     JdbcTemplate jdbcTemplate;
-    DataSource dataSource;
 
     @Autowired
     public SessionDAO(DataSource dataSource) {
-        this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
