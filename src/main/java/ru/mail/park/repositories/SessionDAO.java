@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import ru.mail.park.dataSets.UserDataSet;
 
 import javax.servlet.http.HttpSession;
+import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.Date;
 
@@ -15,10 +16,12 @@ import java.util.Date;
 @Repository
 public class SessionDAO {
     JdbcTemplate jdbcTemplate;
+    DataSource dataSource;
 
     @Autowired
-    public SessionDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public SessionDAO(DataSource dataSource) {
+        this.dataSource = dataSource;
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
     public long getUserId(HttpSession session) {
