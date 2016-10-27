@@ -22,12 +22,14 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="true" />
+        <module name="Brain404-TheGame" />
         <module name="Brain404_TheGame" />
-        <module name="JavaNew" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="Brain404-TheGame" target="1.8" />
       <module name="Brain404_TheGame" target="1.8" />
+      <module name="db-api" target="1.8" />
       <module name="JavaNew" target="1.8" />
       <module name="javaNew" target="1.8" />
     </bytecodeTargetLevel>

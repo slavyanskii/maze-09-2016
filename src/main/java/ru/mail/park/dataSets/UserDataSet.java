@@ -1,22 +1,31 @@
-package ru.mail.park.model;
+package ru.mail.park.dataSets;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by Solovyev on 17/09/16.
  */
-public class UserProfile {
+public class UserDataSet {
     private String login;
     private String email;
     private String password;
-    private Long id;
-    private static final AtomicLong ID_GENERATOR = new AtomicLong(0);
+    private int maxScore;
+    private Long id = null;
 
-    public UserProfile(String login, String email, String password) {
+    public UserDataSet(String login, String email, String password) {
         this.login = login;
         this.email = email;
         this.password = password;
-        this.id = ID_GENERATOR.getAndIncrement();
+    }
+
+    public void setMaxScore(int maxScore) {
+        this.maxScore = maxScore;
+    }
+
+    public int getMaxScore() {
+        return maxScore;
     }
 
     public String getLogin() {
@@ -29,6 +38,10 @@ public class UserProfile {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

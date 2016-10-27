@@ -8,3 +8,7 @@ deploy:
   app: nameless-wildwood-32323
   on:
     repo: slavyanskii/maze-09-2016
+branches:
+  only:
+    - lol
+    - master
