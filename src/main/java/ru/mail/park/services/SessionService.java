@@ -12,4 +12,6 @@ public interface SessionService {
     public void addUser(HttpSession session, UserDataSet user);
 
     public UserDataSet getUser(HttpSession session);
+
+    public void delUser(HttpSession session);
 }

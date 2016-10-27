@@ -74,6 +74,20 @@ public class RegistrationController {
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
+    @RequestMapping(path = "/logout", method = RequestMethod.DELETE)
+    public ResponseEntity logout(HttpSession session) {
+
+        final UserDataSet user = sessionService.getUser(session);
+
+        if (user != null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.NOT_LOGGED_IN_MSG));
+        }
+
+        sessionService.addUser(session, user);
+        return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
+    }
+
     private static final class AuthorizationRequest {
         @NotNull
         private String login;

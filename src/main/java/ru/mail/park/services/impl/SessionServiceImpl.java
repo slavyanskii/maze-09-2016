@@ -49,4 +49,13 @@ public class SessionServiceImpl implements SessionService {
         }
         return userDAO.getUserById(userId);
     }
+
+    @Override
+    public void delUser(HttpSession session) {
+        try {
+            sessionDAO.delUser(session);
+        } catch (DuplicateKeyException e) {
+            Application.logger.warn(e);
+        }
+    }
 }

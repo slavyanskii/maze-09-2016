@@ -46,4 +46,9 @@ public class SessionDAO {
 
         jdbcTemplate.update(SQL, timestamp, session.getId());
     }
+
+    public void delUser(HttpSession session){
+        final String sql = "DELETE FROM session WHERE session_id = ?";
+        jdbcTemplate.update(sql, session);
+    }
 }
