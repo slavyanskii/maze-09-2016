@@ -1,5 +1,6 @@
 package ru.mail.park.main;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -78,13 +79,14 @@ public class RegistrationController {
     public ResponseEntity logout(HttpSession session) {
 
         final UserDataSet user = sessionService.getUser(session);
+        Util.println(session.getId());
 
-        if (user != null) {
+        if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.NOT_LOGGED_IN_MSG));
         }
 
-        sessionService.addUser(session, user);
+        sessionService.delUser(session);
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 

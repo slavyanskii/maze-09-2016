@@ -5,8 +5,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.dataSets.UserDataSet;
 
-import javax.sql.DataSource;
-
 /**
  * Created by kirrok on 21.10.16.
  */
@@ -15,9 +13,8 @@ import javax.sql.DataSource;
 public class UserDAO {
     private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public UserDAO(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public UserDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public void addUser(String login, String password, String email) {

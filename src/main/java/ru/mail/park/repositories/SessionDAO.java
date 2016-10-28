@@ -1,6 +1,8 @@
 package ru.mail.park.repositories;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.dataSets.UserDataSet;
@@ -15,11 +17,10 @@ import java.util.Date;
  */
 @Repository
 public class SessionDAO {
-    JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public SessionDAO(DataSource dataSource) {
-        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    public SessionDAO(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public long getUserId(HttpSession session) {
@@ -49,6 +50,7 @@ public class SessionDAO {
 
     public void delUser(HttpSession session){
         final String sql = "DELETE FROM session WHERE session_id = ?";
-        jdbcTemplate.update(sql, session);
+        Util.println(session.getId());
+        jdbcTemplate.update(sql, session.getId());
     }
 }
