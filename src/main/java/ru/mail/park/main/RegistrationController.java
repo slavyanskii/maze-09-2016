@@ -42,7 +42,8 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/registration", method = RequestMethod.POST)
-    public ResponseEntity registration(@RequestBody @Valid RegistrationRequest body) {
+    public ResponseEntity registration(@RequestBody @Valid RegistrationRequest body,
+                                       HttpSession session) {
 
         final String login = body.getLogin();
         final String password = body.getPassword();
@@ -55,6 +56,13 @@ public class RegistrationController {
                     .body(new ErrorResponse(HttpStatus.FORBIDDEN.toString(), ErrorResponse.USER_ALREADY_EXISTS_MSG));
         }
         accountService.addUser(login, password, email);
+
+        final UserDataSet user = accountService.getUser(login);
+        if (user == null || !user.getPassword().equals(password)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ErrorResponse(HttpStatus.UNAUTHORIZED.toString(), ErrorResponse.AUTHORIZATION_ERROR_MSG));
+        }
+        sessionService.addUser(session, user);
         return ResponseEntity.ok(new SuccessResponse(login));
     }
 

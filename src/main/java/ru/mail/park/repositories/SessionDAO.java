@@ -1,14 +1,11 @@
 package ru.mail.park.repositories;
 
 import com.sun.org.apache.xalan.internal.xsltc.compiler.util.Util;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.mail.park.dataSets.UserDataSet;
 
 import javax.servlet.http.HttpSession;
-import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.Date;
 
