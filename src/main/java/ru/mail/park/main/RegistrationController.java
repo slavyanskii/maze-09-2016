@@ -41,6 +41,13 @@ public class RegistrationController {
         return ResponseEntity.ok(new SuccessResponse(user.getLogin()));
     }
 
+    @RequestMapping(path = "/scoreboard", method = RequestMethod.GET)
+    public ResponseEntity score(String limit) {
+
+        accountService.score(limit);
+        return ResponseEntity.ok(accountService.score(limit));
+    }
+
     @RequestMapping(path = "/registration", method = RequestMethod.POST)
     public ResponseEntity registration(@RequestBody @Valid RegistrationRequest body,
                                        HttpSession session) {

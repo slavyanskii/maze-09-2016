@@ -10,6 +10,9 @@ import ru.mail.park.dataSets.UserDataSet;
 import ru.mail.park.repositories.UserDAO;
 import ru.mail.park.services.AccountService;
 
+import java.util.List;
+import java.util.Map;
+
 @Service
 @Transactional
 public class AccountServiceImpl implements AccountService {
@@ -39,5 +42,9 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public void updateUser(UserDataSet user) {
         userDao.updateUser(user);
+    }
+
+    public List<Map<String, Object>> score(String limit){
+        return userDao.getUsersScore(limit);
     }
 }

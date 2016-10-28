@@ -53,4 +53,10 @@ public class UserDAO {
         final String sql = "UPDATE user SET max_score = ?, email = ?, password = ?, login = ? WHERE id = ?;";
         jdbcTemplate.update(sql, user.getMaxScore(), user.getEmail(), user.getPassword(), user.getPassword());
     }
+
+    public List<Map<String, Object>> getUsersScore(String limit) {
+        final String sql = "SELECT login, max_score FROM user LIMIT ?;";
+        int lim = Integer.parseInt(limit);
+        return jdbcTemplate.queryForList(sql, lim);
+    }
 }
