@@ -21,7 +21,7 @@ CREATE TABLE `user` (
 CREATE TABLE `session` (
 	`id` int (11) NOT NULL AUTO_INCREMENT,
 	`session_id` varchar(250) NOT NULL,
-	`user_id` int (11) NOT NULL UNIQUE,
+	`user_id` int (11) NOT NULL,
 	`creation_time` DATETIME NOT NULL,
 	`last_accessed_time` DATETIME NOT NULL,
 	PRIMARY KEY(id),
