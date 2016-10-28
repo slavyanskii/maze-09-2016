@@ -42,9 +42,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(path = "/scoreboard", method = RequestMethod.GET)
-    public ResponseEntity score(String limit) {
-
-        accountService.score(limit);
+    public ResponseEntity score(@RequestParam String limit) {
         return ResponseEntity.ok(accountService.score(limit));
     }
 

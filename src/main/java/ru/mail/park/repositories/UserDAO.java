@@ -56,7 +56,7 @@ public class UserDAO {
 
     public List<Map<String, Object>> getUsersScore(String limit) {
         final String sql = "SELECT login, max_score FROM user order by -max_score LIMIT ?;";
-        int lim = Integer.parseInt(limit);
+        final int lim = Integer.parseInt(limit);
         return jdbcTemplate.queryForList(sql, lim);
     }
 }
